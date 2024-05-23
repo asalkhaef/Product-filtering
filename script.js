@@ -1,3 +1,4 @@
+// static array of out products! (something like db)
 const products = [
   {
     name: "Sony Playstation 5",
@@ -117,7 +118,7 @@ function updateCart(event) {
   const statusElement = event.target;
 
   if (statusElement.classList.contains("added")) {
-    // Remove from cart
+    // Remove
     statusElement.classList.remove("added");
     statusElement.innerText = "Add To Cart";
     statusElement.classList.remove("bg-red-600");
@@ -125,7 +126,7 @@ function updateCart(event) {
 
     cartItemCount--;
   } else {
-    // Add to cart
+    // Add
     statusElement.classList.add("added");
     statusElement.innerText = "Remove From Cart";
     statusElement.classList.remove("bg-gray-800");
@@ -136,4 +137,33 @@ function updateCart(event) {
 
   // Update cart item count
   cartCount.innerText = cartItemCount.toString();
+}
+
+//Listeners for filter
+filtersContainer.addEventListener("change", filterProducts);
+searchInput.addEventListener("input", filterProducts);
+
+function filterProducts() {
+  const searchTerm = searchInput.value.trim().toLowerCase();
+  const checkedCategories = Array.from(checkboxes)
+    .filter((check) => check.checked)
+    .map((check) => check.id);
+
+  console.log(checkedCategories);
+
+  productElements.forEach((productElement, index) => {
+    const product = products[index];
+
+    const matchesSearchTerm = product.name.toLowerCase().includes(searchTerm);
+    const isInCheckedCategory =
+      checkedCategories.length === 0 ||
+      checkedCategories.includes(product.category);
+
+    // Show or hide
+    if (matchesSearchTerm && isInCheckedCategory) {
+      productElement.classList.remove("hidden");
+    } else {
+      productElement.classList.add("hidden");
+    }
+  });
 }
