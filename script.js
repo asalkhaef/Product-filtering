@@ -84,7 +84,15 @@ let cartItemCount = 0;
 const productElements = [];
 
 products.forEach((product) => {
+  console.log(product);
+  const productElement = createProductElement(product);
+  productElements.push(productElement);
+  productsWrapper.appendChild(productElement);
+});
+
+function createProductElement(product) {
   const productElement = document.createElement("div");
+
   productElement.className = "item space-y-2";
 
   productElement.innerHTML = `<div
@@ -101,7 +109,31 @@ products.forEach((product) => {
 </div>
 <p class="text-xl">${product.name}</p>
 <strong>$${product.price.toLocaleString()}</strong>`;
+  productElement.querySelector(".status").addEventListener("click", updateCart);
+  return productElement;
+}
 
-  productElements.push(productElement);
-  productsWrapper.appendChild(productElement);
-});
+function updateCart(event) {
+  const statusElement = event.target;
+
+  if (statusElement.classList.contains("added")) {
+    // Remove from cart
+    statusElement.classList.remove("added");
+    statusElement.innerText = "Add To Cart";
+    statusElement.classList.remove("bg-red-600");
+    statusElement.classList.add("bg-gray-800");
+
+    cartItemCount--;
+  } else {
+    // Add to cart
+    statusElement.classList.add("added");
+    statusElement.innerText = "Remove From Cart";
+    statusElement.classList.remove("bg-gray-800");
+    statusElement.classList.add("bg-red-600");
+
+    cartItemCount++;
+  }
+
+  // Update cart item count
+  cartCount.innerText = cartItemCount.toString();
+}
